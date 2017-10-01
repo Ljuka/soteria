@@ -4,6 +4,7 @@ from numpy.core.defchararray import splitlines
 
 sys.path.insert(0, 'functions/')
 import web_scanner
+import web_tester
 import sys
 import time
 from PIL import ImageTk
@@ -31,7 +32,7 @@ except ImportError:
     #     self.master.geometry(self._geom)
     #     self._geom=geom
 
-
+# Za skeniranje sajta
 def writeInTextBox():
     sk = skenirano.get()
     if sk != "":
@@ -78,10 +79,28 @@ def writeInTextBox():
             rezultat.see(END)
             time.sleep(0.1)
 
+# Za napad sajta
+def fullAttacks():
+    sk = skenirano.get()
+    if sk != "":
+        # sqlmap
+        rezultat.insert(INSERT, "\n SQL Injection napad u toku... ")
+        rezultat.see(END)
+        domain_name = web_tester.sqlmapAttack(sk)
+        rezultat.insert(INSERT, domain_name)
+        rezultat.see(END)
+
+
 def threadedInTextBox(self):
     t1 = threading.Thread(target=writeInTextBox)
     t1.start()
 
+# def ddosNapad():
+#     web_tester.ddosAttack("http://www.portoweb.com.br/")
+
+def attackWebPage(self):
+    t1 = threading.Thread(target=fullAttacks)
+    t1.start()
 
 
 root = Tk()
@@ -106,6 +125,7 @@ url_unos.focus_set()
 
 pocni = Button(root, text="Pocni", bg="#2de810")
 pocni.place(relx=.28, rely=.3, anchor="n", width=150)
+pocni.bind("<Button-1>", attackWebPage)
 
 
 rezultat = Text(root)
