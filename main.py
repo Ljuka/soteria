@@ -84,9 +84,16 @@ def fullAttacks():
     sk = skenirano.get()
     if sk != "":
         # sqlmap
-        rezultat.insert(INSERT, "\n SQL Injection napad u toku... ")
+        rezultat.insert(INSERT, "\n SQL Injection napad u toku... \n")
         rezultat.see(END)
         domain_name = web_tester.sqlmapAttack(sk)
+        rezultat.insert(INSERT, domain_name)
+        rezultat.see(END)
+
+        # xsser
+        rezultat.insert(INSERT, "\n\nXSS Injection napad u toku... \nOvo moze da potraje nekoliko minuta. Sacekajte.....")
+        rezultat.see(END)
+        domain_name = web_tester.xsserAttack(sk)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
@@ -99,8 +106,8 @@ def threadedInTextBox(self):
 #     web_tester.ddosAttack("http://www.portoweb.com.br/")
 
 def attackWebPage(self):
-    t1 = threading.Thread(target=fullAttacks)
-    t1.start()
+    t2 = threading.Thread(target=fullAttacks)
+    t2.start()
 
 
 root = Tk()

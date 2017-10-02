@@ -16,6 +16,7 @@ def sqlmapAttack(url):
     #   option = "-F"
     import os
     import re
+    import time
     command = 'python sqlmap.py -u "'+url+'" --batch --text-only'
     process = os.popen(command)
     results = str(process.read())
@@ -27,3 +28,20 @@ def sqlmapAttack(url):
         return "\n SQLMAP nije mogao da nadje slabu tacku u datoj adresi. \n Pokusajte da unesete drugaciju adresu. " \
                "Npr. adresu koja u sebi ima vise djelova. \n" \
                "Tipovi adresa koje mogu da prodju ovaj test su: https://nesto.com/nesto-drugo ili https://nesto.com?id=1234 "
+
+
+def xsserAttack(url):
+
+    import os
+    import re
+    command = './xsser -u "' + url + '" -s --no-head --auto '
+    # command = './xsser -u "' + url + '" -c 500 --Cw 1 --Cl -s --no-head --alive 3 --reverse-check --follow-redirects --follow-limit 10 --threads 5 --timeout 5 --auto --Coo --Xsa --Xsr --Dom --Dcp --Ind '
+    import time
+    process = os.popen(command)
+    results = str(process.read())
+    start = results.find('Statistic:') + 3
+    end = results.find('---', start)
+    if(start > 3):
+        return "\nS" + results[start:-1] + "\n \n"
+    else:
+        return "\n\nXSS napad nije uspio. \n"
