@@ -1,3 +1,4 @@
+# coding=utf-8
 #from functions.web_scanner import print_u_rezultat
 import sys
 from numpy.core.defchararray import splitlines
@@ -43,7 +44,7 @@ def writeInTextBox():
 
         # IP Adresa
         ip = web_scanner.get_ip_address(domain_name)
-        rezultat.insert(INSERT, "\n \n " + ip + " \n Please wait... \n")
+        rezultat.insert(INSERT, "\n \n " + ip + u" \n Molimo sačekajte... \n")
         rezultat.see(END)
 
         # NMAP print
@@ -83,18 +84,20 @@ def writeInTextBox():
 def fullAttacks():
     sk = skenirano.get()
     is_checkedTor = tor.get()
+    is_checkedSens = sens_info.get()
+    is_checkedLevel = attack_level.get()
     if sk != "":
         # sqlmap
-        rezultat.insert(INSERT, "\n SQL Injection napad u toku... \nOvo moze da potraje nekoliko minuta...")
+        rezultat.insert(INSERT, u"\n SQL Injection napad u toku... \nOvo može da potraje nekoliko minuta...")
         rezultat.see(END)
-        domain_name = web_tester.sqlmapAttack(sk, is_checkedTor)
+        domain_name = web_tester.sqlmapAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
         # xsser
-        rezultat.insert(INSERT, "\n\nXSS Injection napad u toku... \nOvo moze da potraje nekoliko minuta. Sacekajte.....")
+        rezultat.insert(INSERT, u"\n\nXSS Injection napad u toku... \nOvo može da potraje nekoliko minuta. Sačekajte.....")
         rezultat.see(END)
-        domain_name = web_tester.xsserAttack(sk, is_checkedTor)
+        domain_name = web_tester.xsserAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
@@ -113,8 +116,11 @@ def attackWebPage(self):
 
 root = Tk()
 root.resizable(0,0)
+# Naslov
+root.winfo_toplevel().title("Soteria")
 
 
+# Pozadina
 image1 = PhotoImage(file="1.gif")
 w = image1.width()
 h = image1.height()
@@ -124,6 +130,7 @@ panel1 = Label(root, image=image1)
 panel1.pack(side='top', fill='both', expand='yes')
 
 
+# Labela za unos url-a
 skenirano = StringVar()
 url = Label(root, text="Unesite adresu za testiranje: ")
 url_unos = Entry(root, textvariable=skenirano)
@@ -131,18 +138,37 @@ url.place(relx=.1, rely=.2, anchor="n")
 url_unos.place(relx=.5, rely=.2, anchor="n", width=550)
 url_unos.focus_set()
 
-pocni = Button(root, text="Pocni", bg="#2de810")
+# Dugme za pocetak napada
+pocni = Button(root, text=u"Počni", bg="#2de810")
 pocni.place(relx=.28, rely=.3, anchor="n", width=150)
 pocni.bind("<Button-1>", attackWebPage)
 
 
+# Textarea za ispis rezultata
 rezultat = Text(root)
-rezultat.place(relx=.5, rely=.4, anchor="n", width=900, height=250)
+rezultat.place(relx=.5, rely=.42, anchor="n", width=900, height=250)
+
+# Dugme za skeniranje sajta
 skeniraj = Button(root, text="Skeniraj", bg="#2131fa")
 skeniraj.place(relx=.5, rely=.3, anchor="n", width=150)
 skeniraj.bind("<Button-1>", threadedInTextBox)
 
+# Opcije
+    # Tor
 tor = IntVar()
-Checkbutton(root, text="Tor", onvalue=1, offvalue=0, variable=tor).place(relx=.823, rely=.2, anchor="n")
+Checkbutton(root, text="Tor", onvalue=1, offvalue=0, variable=tor).place(relx=.22, rely=.38, anchor="n")
+
+    # Osjetljive informacije
+sens_info = IntVar()
+Checkbutton(root, text=u"Prikaži osjetljive informacije", onvalue=1, offvalue=0, variable=sens_info).place(relx=.4, rely=.38, anchor="n")
+
+
+    # Jacina napada
+attack_level = IntVar()
+Checkbutton(root, text=u"Jači napad", onvalue=1, offvalue=0, variable=attack_level).place(relx=.6, rely=.38, anchor="n")
+
+
+
+
 
 root.mainloop()
