@@ -50,16 +50,18 @@ def get_nmap(option, domain):
     #if not option:
     #   option = "-F"
     import os
-    command = "nmap --host-timeout 10" + domain
+    command = "nmap --host-timeout 10 " + domain
     process = os.popen(command)
     results = str(process.read())
     return "\n \n NMAP: \n \n " + results + "\n \n"
 
 def get_robots_txt(url):
-    if url.endswith('/'):
-        path = url
-    else:
-        path = url + '/'
+    # if url.endswith('/'):
+    #     path = url
+    # else:
+    #     path = url + '/'
+    url_spitted = url.split("/")
+    path = url_spitted[0] + "//" + url_spitted[2] + "/"
     import urllib2
     try:
         req = urllib2.urlopen(path + 'robots.txt', data=None)
@@ -74,9 +76,9 @@ def get_robots_txt(url):
 # You might have to add the directory path of where you unpack whois to the system variables
 # if so, check:
 # http://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them
-def get_whois(url):
+def get_whois(domain):
     import os
-    command = "whois " + url
+    command = "whois " + domain
     process = os.popen(command)
     results = process.read()
     return "Detalji korisnika sajta (WhoIs): \n \n " + results + "\n \n"

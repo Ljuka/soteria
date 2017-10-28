@@ -11,13 +11,16 @@
 #     s.close()
 
 
-def sqlmapAttack(url):
+def sqlmapAttack(url, tor):
     #if not option:
     #   option = "-F"
     import os
     import re
     import time
-    command = 'python sqlmap.py -u "'+url+'" --batch --text-only'
+    if tor == 1:
+        command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor'
+    else:
+        command = 'python sqlmap.py -u "'+url+'" --batch --text-only'
     process = os.popen(command)
     results = str(process.read())
     start = results.find('---') + 3
@@ -30,11 +33,14 @@ def sqlmapAttack(url):
                "Tipovi adresa koje mogu da prodju ovaj test su: https://nesto.com/nesto-drugo ili https://nesto.com?id=1234 "
 
 
-def xsserAttack(url):
+def xsserAttack(url, tor):
 
     import os
     import re
-    command = './xsser -u "' + url + '" -s --no-head --auto '
+    if tor == 1:
+        command = './xsser -u "' + url + '" -s --no-head --auto --tor '
+    else:
+        command = './xsser -u "' + url + '" -s --no-head --auto '
     # command = './xsser -u "' + url + '" -c 500 --Cw 1 --Cl -s --no-head --alive 3 --reverse-check --follow-redirects --follow-limit 10 --threads 5 --timeout 5 --auto --Coo --Xsa --Xsr --Dom --Dcp --Ind '
     import time
     process = os.popen(command)

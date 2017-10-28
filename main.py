@@ -59,8 +59,8 @@ def writeInTextBox():
 
         # ROBOTS print
         robots_txt = web_scanner.get_robots_txt(sk)
-        robots_splited = robots_txt.split("\n")
-        for line in robots_splited:
+        robots_spitted = robots_txt.split("\n")
+        for line in robots_spitted:
             rezultat.insert(INSERT, line)
             rezultat.see(END)
             time.sleep(0.1)
@@ -82,18 +82,19 @@ def writeInTextBox():
 # Za napad sajta
 def fullAttacks():
     sk = skenirano.get()
+    is_checkedTor = tor.get()
     if sk != "":
         # sqlmap
-        rezultat.insert(INSERT, "\n SQL Injection napad u toku... \n")
+        rezultat.insert(INSERT, "\n SQL Injection napad u toku... \nOvo moze da potraje nekoliko minuta...")
         rezultat.see(END)
-        domain_name = web_tester.sqlmapAttack(sk)
+        domain_name = web_tester.sqlmapAttack(sk, is_checkedTor)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
         # xsser
         rezultat.insert(INSERT, "\n\nXSS Injection napad u toku... \nOvo moze da potraje nekoliko minuta. Sacekajte.....")
         rezultat.see(END)
-        domain_name = web_tester.xsserAttack(sk)
+        domain_name = web_tester.xsserAttack(sk, is_checkedTor)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
@@ -141,5 +142,7 @@ skeniraj = Button(root, text="Skeniraj", bg="#2131fa")
 skeniraj.place(relx=.5, rely=.3, anchor="n", width=150)
 skeniraj.bind("<Button-1>", threadedInTextBox)
 
+tor = IntVar()
+Checkbutton(root, text="Tor", onvalue=1, offvalue=0, variable=tor).place(relx=.823, rely=.2, anchor="n")
 
 root.mainloop()
