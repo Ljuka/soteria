@@ -18,11 +18,11 @@ def sqlmapAttack(url, tor, sens_info, attack_level):
     import os
     import re
     import time
-    if tor == 1 & attack_level == 1:
+    if tor == 1 and attack_level == 1:
         command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --level=3 --risk=3'
-    elif tor == 1 & attack_level == 0:
+    elif tor == 1 and attack_level == 0:
         command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor'
-    elif tor == 0 & attack_level == 1:
+    elif tor == 0 and attack_level == 1:
         command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=3'
     else:
         command = 'python sqlmap.py -u "'+url+'" --batch --text-only'
@@ -37,20 +37,25 @@ def sqlmapAttack(url, tor, sens_info, attack_level):
         else:
             return u"\n Pronađena rupa u sajtu sa SQL injection-om. \n \n"
     else:
-        return u"\n SQL Injection napad nije mogao da nađe slabu tačku u datoj adresi. \n Pokušajte da unesete drugačiju adresu (npr. adresu koja u sebi ima više djelova)" \
-               u" ili da izaberete jači napad. \n" \
-               u"Tipovi adresa koje mogu da prođu ovaj test su: https://nešto.com/nešto-drugo ili https://nešto.com?id=1234 "
+        start = results.find('can\'t establish connection with the Tor') + 3
+        end = results.find('[*] shutting down', start)
+        if(start > 3 and end > 3):
+            return u"\nSQL Injection nije uspio. \n\n Morate uključiti Tor mrežu ako hoćete da idete preko Tor mreže!. "
+        else:
+            return u"\n SQL Injection napad nije mogao da nađe slabu tačku u datoj adresi. \n Pokušajte da unesete drugačiju adresu (npr. adresu koja u sebi ima više djelova)" \
+                u" ili da izaberete jači napad. \n" \
+                u"Tipovi adresa koje mogu da prođu ovaj test su: https://nešto.com/nešto-drugo ili https://nešto.com?id=1234 "
 
 
 def xsserAttack(url, tor, sens_info, attack_level):
 
     import os
     import re
-    if tor == 1 & attack_level == 1:
+    if tor == 1 and attack_level == 1:
         command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
-    elif tor == 1 & attack_level == 0:
+    elif tor == 1 and attack_level == 0:
         command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 '
-    elif tor == 0 & attack_level == 1:
+    elif tor == 0 and attack_level == 1:
         command = './xsser -u "' + url + '" -s --no-head --auto --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
     else:
         command = './xsser -u "' + url + '" -s --no-head --auto '
