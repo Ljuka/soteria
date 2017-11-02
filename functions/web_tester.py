@@ -23,9 +23,9 @@ def sqlmapAttack(url, tor, sens_info, attack_level):
     elif tor == 1 and attack_level == 0:
         command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor'
     elif tor == 0 and attack_level == 1:
-        command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=3'
+        command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=3 --random-agent'
     else:
-        command = 'python sqlmap.py -u "'+url+'" --batch --text-only'
+        command = 'python sqlmap.py -u "'+url+'" --batch --text-only --random-agent'
 
     process = os.popen(command)
     results = str(process.read())
