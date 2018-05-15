@@ -992,7 +992,6 @@ def readInput(message, default=None, checkBatch=True, boolean=False):
                 retVal = getUnicode(answer, UNICODE_ENCODING)
             elif answer is None and retVal:
                 retVal = "%s,%s" % (retVal, getUnicode(item, UNICODE_ENCODING))
-
     if retVal:
         dataToStdout("\r%s%s\n" % (message, retVal), forceOutput=True, bold=True)
 
@@ -1008,6 +1007,13 @@ def readInput(message, default=None, checkBatch=True, boolean=False):
             else:
                 options = unicode()
 
+            if message.startswith("sqlmap got a 302 redirect to"):
+                if options == "Y":
+                    options = "n"
+                    default = "n"
+                else:
+                    options = "Y"
+                    default = "Y"
             dataToStdout("\r%s%s\n" % (message, options), forceOutput=True, bold=True)
 
             debugMsg = "used the default behaviour, running in batch mode"

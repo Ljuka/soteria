@@ -12,20 +12,30 @@
 #     s.close()
 
 
-def sqlmapAttack(url, tor, sens_info, attack_level):
+def sqlmapAttack(url, tor, sens_info, attack_level, post_method):
     #if not option:
     #   option = "-F"
     import os
     import re
     import time
-    if tor == 1 and attack_level == 1:
-        command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --level=3 --risk=5'
-    elif tor == 1 and attack_level == 0:
-        command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor'
-    elif tor == 0 and attack_level == 1:
-        command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=5 --random-agent'
+    if post_method == "":
+        if tor == 1 and attack_level == 1:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --level=3 --risk=5'
+        elif tor == 1 and attack_level == 0:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor'
+        elif tor == 0 and attack_level == 1:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=5 --random-agent'
+        else:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --random-agent'
     else:
-        command = 'python sqlmap.py -u "'+url+'" --batch --text-only --random-agent'
+        if tor == 1 and attack_level == 1:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --level=3 --risk=5 --method POST --data="'+post_method+'"'
+        elif tor == 1 and attack_level == 0:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --method POST --data="'+post_method+'"'
+        elif tor == 0 and attack_level == 1:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=5 --random-agent --method POST --data="'+post_method+'"'
+        else:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --random-agent --method POST --data="'+post_method+'"'
 
     process = os.popen(command)
     results = str(process.read())
@@ -47,18 +57,29 @@ def sqlmapAttack(url, tor, sens_info, attack_level):
                 u"Tipovi adresa koje mogu da prođu ovaj test su: https://nešto.com/nešto-drugo ili https://nešto.com?id=1234 "
 
 
-def xsserAttack(url, tor, sens_info, attack_level):
+def xsserAttack(url, tor, sens_info, attack_level, post_method):
 
     import os
     import re
-    if tor == 1 and attack_level == 1:
-        command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
-    elif tor == 1 and attack_level == 0:
-        command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 '
-    elif tor == 0 and attack_level == 1:
-        command = './xsser -u "' + url + '" -s --no-head --auto --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
+    if post_method == "":
+        if tor == 1 and attack_level == 1:
+            command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
+        elif tor == 1 and attack_level == 0:
+            command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 '
+        elif tor == 0 and attack_level == 1:
+            command = './xsser -u "' + url + '" -s --no-head --auto --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
+        else:
+            command = './xsser -u "' + url + '" -s --no-head --auto '
     else:
-        command = './xsser -u "' + url + '" -s --no-head --auto '
+        if tor == 1 and attack_level == 1:
+            command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom -p "'+post_method+'" --auto'
+        elif tor == 1 and attack_level == 0:
+            command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 -p "'+post_method+'" --auto'
+        elif tor == 0 and attack_level == 1:
+            command = './xsser -u "' + url + '" -s --no-head --auto --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom -p "'+post_method+'" --auto'
+        else:
+            command = './xsser -u "' + url + '" -s --no-head --auto -p "'+post_method+'" --auto'
+
     # command = './xsser -u "' + url + '" -c 500 --Cw 1 --Cl -s --no-head --alive 3 --reverse-check --follow-redirects --follow-limit 10 --threads 5 --timeout 5 --auto --Coo --Xsa --Xsr --Dom --Dcp --Ind '
     import time
     process = os.popen(command)

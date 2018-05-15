@@ -87,18 +87,20 @@ def fullAttacks():
     is_checkedTor = tor.get()
     is_checkedSens = sens_info.get()
     is_checkedLevel = attack_level.get()
+    post = post_lbl.get()
+
     if sk != "":
         # sqlmap
         rezultat.insert(INSERT, u"\n SQL Injection napad u toku... \nOvo može da potraje nekoliko minuta...")
         rezultat.see(END)
-        domain_name = web_tester.sqlmapAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel)
+        domain_name = web_tester.sqlmapAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel, post)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
         # xsser
         rezultat.insert(INSERT, u"\n\nXSS Injection napad u toku... \nOvo može da potraje nekoliko minuta. Sačekajte.....")
         rezultat.see(END)
-        domain_name = web_tester.xsserAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel)
+        domain_name = web_tester.xsserAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel, post)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
@@ -114,6 +116,14 @@ def attackWebPage(self):
     t2 = threading.Thread(target=fullAttacks)
     t2.start()
 
+def toggle(self):
+    checkbox = post_method.get()
+    if not checkbox:
+        post_txt.lift()
+        post_lbl.lift()
+    else:
+        post_txt.lower()
+        post_lbl.lower()
 
 root = Tk()
 root.resizable(0,0)
@@ -139,6 +149,20 @@ url.place(relx=.1, rely=.2, anchor="n")
 url_unos.place(relx=.5, rely=.2, anchor="n", width=550)
 url_unos.focus_set()
 
+# Labela za unos POST-a
+post = StringVar()
+post_txt = Label(root, text="Unesite POST parametre: ")
+post_lbl = Entry(root, textvariable=post_txt)
+post_txt.place(relx=.1, rely=.4, anchor="n")
+post_lbl.place(relx=.5, rely=.4, anchor="n", width=550)
+url_unos.focus_set()
+# Sakrijemo ova polja...
+post_txt.lower()
+post_lbl.lower()
+# post_lbl.visible = False
+
+
+
 # Dugme za pocetak napada
 pocni = Button(root, text=u"Počni", bg="#2de810")
 pocni.place(relx=.28, rely=.3, anchor="n", width=150)
@@ -147,7 +171,7 @@ pocni.bind("<Button-1>", attackWebPage)
 
 # Textarea za ispis rezultata
 rezultat = Text(root)
-rezultat.place(relx=.5, rely=.42, anchor="n", width=900, height=250)
+rezultat.place(relx=.5, rely=.50, anchor="n", width=900, height=250)
 
 # Dugme za skeniranje sajta
 skeniraj = Button(root, text="Skeniraj", bg="#2131fa")
@@ -157,19 +181,22 @@ skeniraj.bind("<Button-1>", threadedInTextBox)
 # Opcije
     # Tor
 tor = IntVar()
-Checkbutton(root, text="Tor", onvalue=1, offvalue=0, variable=tor).place(relx=.22, rely=.38, anchor="n")
+Checkbutton(root, text="Tor", onvalue=1, offvalue=0, variable=tor).place(relx=.22, rely=.46, anchor="n")
 
     # Osjetljive informacije
 sens_info = IntVar()
-Checkbutton(root, text=u"Prikaži osjetljive informacije", onvalue=1, offvalue=0, variable=sens_info).place(relx=.4, rely=.38, anchor="n")
+Checkbutton(root, text=u"Prikaži osjetljive informacije", onvalue=1, offvalue=0, variable=sens_info).place(relx=.4, rely=.46, anchor="n")
 
 
     # Jacina napada
 attack_level = IntVar()
-Checkbutton(root, text=u"Jači napad", onvalue=1, offvalue=0, variable=attack_level).place(relx=.6, rely=.38, anchor="n")
+Checkbutton(root, text=u"Jači napad", onvalue=1, offvalue=0, variable=attack_level).place(relx=.6, rely=.46, anchor="n")
 
-
-
+    # POST parametri
+post_method = IntVar()
+checkbutton = Checkbutton(root, text=u"POST metod", onvalue=1, offvalue=0, variable=post_method)
+checkbutton.place(relx=.75, rely=.46, anchor="n")
+checkbutton.bind("<Button-1>", toggle)
 
 
 root.mainloop()
