@@ -39,7 +39,8 @@ def writeInTextBox():
     if sk != "":
         # Domen print
         domain_name = web_scanner.get_domain_name(sk)
-        rezultat.insert(INSERT, domain_name)
+        domain_name_res = "Domen: "+domain_name
+        rezultat.insert(INSERT, domain_name_res)
         rezultat.see(END)
 
         # IP Adresa

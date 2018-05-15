@@ -21,17 +21,15 @@ def write_file(path, data):
 
 def get_domain_name(url):
     from tld import get_tld
+    if not (url.startswith('http://') or url.startswith('https://')):
+        url = 'http://'+url
     domain_name = get_tld(url)
     return domain_name
 
 # this is the linux version
-def get_ip_address(url):
-    # command = "host" + url
-    # process = os.popen(command)
-    # results = str(process.read())
-    #marker = results.find('has address') + 12
+def get_ip_address(domain):
     import socket
-    results = socket.gethostbyname(url)
+    results = socket.gethostbyname(domain)
     return "\n \n IP adresa: " + results + "\n \n"
 
 # this is the windows version
@@ -60,13 +58,16 @@ def get_robots_txt(url):
     #     path = url
     # else:
     #     path = url + '/'
+
+    if not (url.startswith('http://') or url.startswith('https://')):
+        url = 'http://' + url
     url_spitted = url.split("/")
     path = url_spitted[0] + "//" + url_spitted[2] + "/"
     import urllib2
     try:
         req = urllib2.urlopen(path + 'robots.txt', data=None)
         data = req
-        return "Robot.txt: \n \n " + data.read() + "\n \n"
+        return "Robots.txt: \n \n " + data.read() + "\n \n"
     except urllib2.HTTPError, e:
         return 'Nije moguce naci robots.txt - HTTPError = ' + str(e.code) + '\n\n'
 
@@ -119,4 +120,3 @@ def print_u_rezultat(url):
         return sum_scanner
 #gather_info('thenewboston', 'https://www.thenewboston.com/')
 #print_u_rezultat("https://www.github.com/")
-
