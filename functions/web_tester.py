@@ -12,13 +12,13 @@
 #     s.close()
 
 
-def sqlmapAttack(url, tor, sens_info, attack_level, post_method):
+def sqlmapAttack(url, tor, sens_info, attack_level, post_method, cookie):
     #if not option:
     #   option = "-F"
     import os
     import re
     import time
-    if post_method == "":
+    if post_method == "" and cookie == "":
         if tor == 1 and attack_level == 1:
             command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --level=3 --risk=5'
         elif tor == 1 and attack_level == 0:
@@ -27,7 +27,7 @@ def sqlmapAttack(url, tor, sens_info, attack_level, post_method):
             command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=5 --random-agent'
         else:
             command = 'python sqlmap.py -u "'+url+'" --batch --text-only --random-agent'
-    else:
+    elif post_method != "" and cookie == "":
         if tor == 1 and attack_level == 1:
             command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --level=3 --risk=5 --method POST --data="'+post_method+'"'
         elif tor == 1 and attack_level == 0:
@@ -36,6 +36,24 @@ def sqlmapAttack(url, tor, sens_info, attack_level, post_method):
             command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=5 --random-agent --method POST --data="'+post_method+'"'
         else:
             command = 'python sqlmap.py -u "'+url+'" --batch --text-only --random-agent --method POST --data="'+post_method+'"'
+    elif post_method == "" and cookie != "":
+        if tor == 1 and attack_level == 1:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --level=3 --risk=5 --cookie="'+cookie+'"'
+        elif tor == 1 and attack_level == 0:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --cookie="'+cookie+'"'
+        elif tor == 0 and attack_level == 1:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=5 --random-agent --cookie="'+cookie+'"'
+        else:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --random-agent --cookie="'+cookie+'"'
+    elif post_method != "" and cookie != "":
+        if tor == 1 and attack_level == 1:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --level=3 --risk=5 --method POST --data="'+post_method+'" --cookie="'+cookie+'"'
+        elif tor == 1 and attack_level == 0:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --tor --method POST --data="'+post_method+'" --cookie="'+cookie+'"'
+        elif tor == 0 and attack_level == 1:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --level=3 --risk=5 --random-agent --method POST --data="'+post_method+'" --cookie="'+cookie+'"'
+        else:
+            command = 'python sqlmap.py -u "'+url+'" --batch --text-only --random-agent --method POST --data="'+post_method+'" --cookie="'+cookie+'"'
 
     process = os.popen(command)
     results = str(process.read())
@@ -57,11 +75,11 @@ def sqlmapAttack(url, tor, sens_info, attack_level, post_method):
                 u"Tipovi adresa koje mogu da prođu ovaj test su: https://nešto.com/nešto-drugo ili https://nešto.com?id=1234 "
 
 
-def xsserAttack(url, tor, sens_info, attack_level, post_method):
+def xsserAttack(url, tor, sens_info, attack_level, post_method, cookie):
 
     import os
     import re
-    if post_method == "":
+    if post_method == "" and cookie == "":
         if tor == 1 and attack_level == 1:
             command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
         elif tor == 1 and attack_level == 0:
@@ -70,7 +88,7 @@ def xsserAttack(url, tor, sens_info, attack_level, post_method):
             command = './xsser -u "' + url + '" -s --no-head --auto --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
         else:
             command = './xsser -u "' + url + '" -s --no-head --auto '
-    else:
+    elif post_method != "" and cookie == "":
         if tor == 1 and attack_level == 1:
             command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom -p "'+post_method+'" --auto'
         elif tor == 1 and attack_level == 0:
@@ -79,6 +97,24 @@ def xsserAttack(url, tor, sens_info, attack_level, post_method):
             command = './xsser -u "' + url + '" -s --no-head --auto --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom -p "'+post_method+'" --auto'
         else:
             command = './xsser -u "' + url + '" -s --no-head --auto -p "'+post_method+'" --auto'
+    elif post_method == "" and cookie != "":
+            if tor == 1 and attack_level == 1:
+                command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom -p "'+post_method+'" --auto --cookie="'+cookie+'"'
+            elif tor == 1 and attack_level == 0:
+                command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 -p "'+post_method+'" --auto --cookie="'+cookie+'"'
+            elif tor == 0 and attack_level == 1:
+                command = './xsser -u "' + url + '" -s --no-head --auto --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom -p "'+post_method+'" --auto --cookie="'+cookie+'"'
+            else:
+                command = './xsser -u "' + url + '" -s --no-head --auto -p "'+post_method+'" --auto --cookie="'+cookie+'"'
+    elif post_method != "" and cookie != "":
+            if tor == 1 and attack_level == 1:
+                command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom -p "'+post_method+'" --auto --cookie="'+cookie+'"'
+            elif tor == 1 and attack_level == 0:
+                command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 -p "'+post_method+'" --auto --cookie="'+cookie+'"'
+            elif tor == 0 and attack_level == 1:
+                command = './xsser -u "' + url + '" -s --no-head --auto --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom -p "'+post_method+'" --auto --cookie="'+cookie+'"'
+            else:
+                command = './xsser -u "' + url + '" -s --no-head --auto -p "'+post_method+'" --auto --cookie="'+cookie+'"'
 
     # command = './xsser -u "' + url + '" -c 500 --Cw 1 --Cl -s --no-head --alive 3 --reverse-check --follow-redirects --follow-limit 10 --threads 5 --timeout 5 --auto --Coo --Xsa --Xsr --Dom --Dcp --Ind '
     import time

@@ -87,20 +87,34 @@ def fullAttacks():
     is_checkedTor = tor.get()
     is_checkedSens = sens_info.get()
     is_checkedLevel = attack_level.get()
+    global br_post, br_cookie
+
+    # Brisemo cookie i post ako niko nije kliknuo
+    if br_post == 0:
+        delete_txt_post(self=1)
+    if br_cookie == 0:
+        delete_txt_cookie(self=1)
+
+    # Uzima se post i cookie
     post = post_lbl.get()
+    cookie = cookie_lbl.get()
+
+    # resetujemo br za post i cookie za sledeci put
+    br_post = 0
+    br_cookie = 0
 
     if sk != "":
         # sqlmap
         rezultat.insert(INSERT, u"\n SQL Injection napad u toku... \nOvo može da potraje nekoliko minuta...")
         rezultat.see(END)
-        domain_name = web_tester.sqlmapAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel, post)
+        domain_name = web_tester.sqlmapAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel, post, cookie)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
         # xsser
         rezultat.insert(INSERT, u"\n\nXSS Injection napad u toku... \nOvo može da potraje nekoliko minuta. Sačekajte.....")
         rezultat.see(END)
-        domain_name = web_tester.xsserAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel, post)
+        domain_name = web_tester.xsserAttack(sk, is_checkedTor, is_checkedSens, is_checkedLevel, post, cookie)
         rezultat.insert(INSERT, domain_name)
         rezultat.see(END)
 
@@ -121,9 +135,26 @@ def toggle(self):
     if not checkbox:
         post_txt.lift()
         post_lbl.lift()
+        cookie_txt.lift()
+        cookie_lbl.lift()
     else:
         post_txt.lower()
         post_lbl.lower()
+        cookie_txt.lower()
+        cookie_lbl.lower()
+
+br_cookie = 0
+br_post = 0
+
+def delete_txt_cookie(self):
+    global  br_cookie
+    cookie_lbl.delete(0, END)
+    br_cookie = 1
+
+def delete_txt_post(self):
+    global  br_post
+    post_lbl.delete(0, END)
+    br_post = 1
 
 root = Tk()
 root.resizable(0,0)
@@ -152,13 +183,25 @@ url_unos.focus_set()
 # Labela za unos POST-a
 post = StringVar()
 post_txt = Label(root, text="Unesite POST parametre: ")
-post_lbl = Entry(root, textvariable=post_txt)
 post_txt.place(relx=.1, rely=.4, anchor="n")
-post_lbl.place(relx=.5, rely=.4, anchor="n", width=550)
-url_unos.focus_set()
+post_lbl = Entry(root, textvariable=post_txt)
+post_lbl.insert(0, "username=admin&password=admin123")
+post_lbl.bind("<Button-1>", delete_txt_post)
+post_lbl.place(relx=.33, rely=.4, anchor="n", width=250)
+
+cookie = StringVar()
+cookie_txt = Label(root, text="Unesite Cookie: ")
+cookie_txt.place(relx=.55, rely=.4, anchor="n")
+cookie_lbl = Entry(root, textvariable=cookie_txt)
+cookie_lbl.insert(0, "PHPSESSID=75500c66d6ceb01107561afd24db0596")
+cookie_lbl.bind("<Button-1>", delete_txt_cookie)
+cookie_lbl.place(relx=.75, rely=.4, anchor="n", width=250)
+
 # Sakrijemo ova polja...
 post_txt.lower()
 post_lbl.lower()
+cookie_txt.lower()
+cookie_lbl.lower()
 # post_lbl.visible = False
 
 
@@ -194,7 +237,7 @@ Checkbutton(root, text=u"Jači napad", onvalue=1, offvalue=0, variable=attack_le
 
     # POST parametri
 post_method = IntVar()
-checkbutton = Checkbutton(root, text=u"POST metod", onvalue=1, offvalue=0, variable=post_method)
+checkbutton = Checkbutton(root, text=u"POST i Cookie", onvalue=1, offvalue=0, variable=post_method)
 checkbutton.place(relx=.75, rely=.46, anchor="n")
 checkbutton.bind("<Button-1>", toggle)
 
