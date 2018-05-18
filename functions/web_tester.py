@@ -76,9 +76,12 @@ def sqlmapAttack(url, tor, sens_info, attack_level, post_method, cookie):
 
 
 def xsserAttack(url, tor, sens_info, attack_level, post_method, cookie):
-
     import os
     import re
+
+    if not (url.startswith('http://') or url.startswith('https://')):
+        url = 'http://' + url
+
     if post_method == "" and cookie == "":
         if tor == 1 and attack_level == 1:
             command = './xsser -u "' + url + '" -s --no-head --auto --proxy http://127.0.0.1:8118 --Cw=5 --reverse-check --Coo --Xsa --Xsr --Dcp --Dom '
@@ -120,6 +123,7 @@ def xsserAttack(url, tor, sens_info, attack_level, post_method, cookie):
     import time
     process = os.popen(command)
     results = str(process.read())
+
     if sens_info == 1:
         start = results.find('List of possible XSS injections:') + 3
         end = results.find('---', start)

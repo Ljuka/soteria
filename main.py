@@ -2,6 +2,14 @@
 #from functions.web_scanner import print_u_rezultat
 import sys
 from numpy.core.defchararray import splitlines
+import os
+
+command = "pip install whois"
+process = os.popen(command)
+results = str(process.read())
+command = "pip install tld"
+process = os.popen(command)
+results = str(process.read())
 
 sys.path.insert(0, 'functions/')
 import web_scanner
